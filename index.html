@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>نتائج المقررات</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    /* الهيدر */
+    #header {
+        background-color: white;
+        border-bottom: 3px solid #2f5233;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+    #nav-bar {
+        min-height: 98px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        flex-wrap: wrap;
+        position: relative;
+    }
+    .siteLogo img {
+        height: 60px;
+    }
+    .siteMenu ul {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .siteMenu li {
+        margin: 0 10px;
+        text-align: center;
+    }
+    .siteMenu a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: black;
+        padding: 10px 15px;
+        transition: background-color 0.3s, border-bottom 0.3s, color 0.3s;
+        border-bottom: 3px solid transparent;
+    }
+    .siteMenu a img {
+        height: 30px;
+        margin-bottom: 5px;
+    }
+    .siteMenu a:hover {
+        background-color: #2f5233;
+        color: white;
+        border-bottom: 3px solid #2f5233;
+    }
+    .siteMenu a:hover h4 {
+        color: white;
+    }
+
+    /* زر المينو للجوال */
+    .menu-toggle {
+        display: none;
+        font-size: 28px;
+        color: #2f5233;
+        cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+        .menu-toggle {
+            display: block;
+        }
+        .siteMenu ul {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            width: 200px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 10px 0;
+        }
+        .siteMenu ul.show {
+            display: flex;
+        }
+        .siteMenu li {
+            margin: 5px 0;
+        }
+    }
+
+    /* مربع معلومات المستخدم */
+    .user-info {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin: 120px auto 10px;
+        padding: 20px;
+        width: 90%;
+        max-width: 800px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        color: #2f5233;
+    }
+    .info-item img {
+        height: 24px;
+    }
+    .info-item strong {
+        color: black;
+    }
+
+    /* الشريط الأخضر للخدمات */
+ /* الشريط الأخضر */
+.services-bar {
+    background-color: #2f5233;
+    height: 40px; 
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    position: relative;
+}
+
+/* زر المينو */
+.services-toggle {
+    background-color: #2f5233;
+    padding: 5px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.services-toggle img {
+    height: 28px;
+}
+
+/* القائمة */
+.services-bar ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex: 1;
+}
+.services-bar ul li a {
+    display: block;
+    padding: 0 15px;
+    color: white;
+    text-decoration: none;
+    height: 40px;
+    line-height: 40px;
+}
+.services-bar ul li a:hover {
+    background-color: #3d6b4c;
+}
+
+/* للشاشات الكبيرة */
+@media (min-width: 769px) {
+    .services-toggle {
+        display: none;
+    }
+    .services-bar {
+        justify-content: center;
+        margin-top: 10px; /* أسفل معلومات المستخدم */
+    }
+}
+
+/* للجوال */
+@media (max-width: 768px) {
+    .services-bar {
+        position: absolute;
+        top: 98px; /* أسفل الهيدر */
+        right: 0;
+        width: 100%;
+        height: 6px; /* نحيف */
+        justify-content: flex-end;
+    }
+    .services-toggle {
+        position: absolute;
+        top: -10px;
+        right: 10px;
+    }
+    .services-bar ul {
+        display: none;
+        flex-direction: column;
+        background-color: #2f5233;
+        position: absolute;
+        top: 35px;
+        right: 0;
+        width: 230px;
+        border-radius: 6px;
+    }
+    .services-bar ul.show {
+        display: flex;
+    }
+}
+
+.services-bar ul li a:hover {
+    background-color: #3d6b4c;
+}
+
+/* إظهار القائمة عند التفعيل */
+.services-bar ul.show {
+    display: flex;
+}
+
+
+
+
+    /* قائمة الفصول واسم الصفحة */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px auto;
+        width: 90%;
+        max-width: 800px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    /* المحتوى */
+    .content {
+        margin-top: 10px;
+        padding: 15px;
+        flex: 1;
+    }
+    table {
+        border-collapse: collapse;
+        width: 98%;
+        margin: 0 auto 15px;
+    }
+    .HEADING {
+        background-color: #a8c3a1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+    .ROW1 td {
+        background-color: #dcebd9;
+        padding: 8px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+    /* الفوتر */
+    #footer {
+        background-color: #2f5233;
+        text-align: center;
+        padding: 10px;
+        margin-top: auto;
+    }
+    #footer img {
+        filter: brightness(0) invert(1);
+        height: 3.8rem;
+    }
+
+    /* للجوال */
+    @media (max-width: 600px) {
+        .user-info {
+            grid-template-columns: 1fr;
+        }
+        .services-bar ul {
+            flex-direction: column;
+            height: auto;
+            padding: 10px 0;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- الهيدر -->
+<div id="header">
+    <div id="nav-bar">
+        <div class="siteLogo">
+            <img src="https://registration.kku.edu.sa/kku/images/NewIcons/kku-logo-header.png" alt="شعار الجامعة">
+        </div>
+        <span class="menu-toggle" onclick="document.querySelector('.siteMenu ul').classList.toggle('show')">☰</span>
+        <div class="siteMenu">
+            <ul>
+                <li><a href="#"><img src="https://registration.kku.edu.sa/kku/images/NewIcons/person.png"><h4>بياناتي</h4></a></li>
+                <li><a href="#"><img src="https://registration.kku.edu.sa/kku/images/NewIcons/home.png"><h4>الرئيسية</h4></a></li>
+                <li><a href="#"><img src="https://registration.kku.edu.sa/kku/images/NewIcons/logout.png"><h4>خروج</h4></a></li>
+                <li><a href="#"><img src="https://registration.kku.edu.sa/kku/images/NewIcons/globe.png"><h4>English</h4></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- مربع معلومات المستخدم -->
+<div class="user-info">
+    <div class="info-item"><img src="https://registration.kku.edu.sa/kku/images/NewIcons/person.png" >يارا بنت الاسمري</div>
+    <div class="info-item"><img src="https://registration.kku.edu.sa/kku/images/NewIcons/studentId.png"> 445812625</div>
+    <div class="info-item"><img src="https://registration.kku.edu.sa/kku/images/NewIcons/field.png"> الأنظمة</div>
+    <div class="info-item"><img src="https://registration.kku.edu.sa/kku/images/NewIcons/college.png">ادارة اعمال - المدينة الجامعية أبها - قريقر</div>
+    <div class="info-item"><img src="https://registration.kku.edu.sa/kku/images/NewIcons/Degree.png"> بكالوريوس</div>
+    <div class="info-item"><img src="https://registration.kku.edu.sa/kku/images/NewIcons/studentStatus.png"> زائر</div>
+    <div class="info-item"><img src="https://registration.kku.edu.sa/kku/images/NewIcons/Average.png"> <strong>المعدل التراكمي:</strong> 4.38</div>
+    <div class="info-item"><img src="https://registration.kku.edu.sa/kku/images/NewIcons/academicMentor.png"> <strong>المرشد الأكاديمي:</strong> د. أميرة عبدالله سالم الشهراني</div>
+</div>
+
+<!-- الشريط الأخضر -->
+<div class="services-bar">
+    <div class="services-toggle" onclick="document.getElementById('services-menu').classList.toggle('show')">
+        <img src="https://registration.kku.edu.sa/kku/images/menuIcon/menuiconn.png" alt="قائمة">
+    </div>
+    <ul id="services-menu">
+        <li><a href="#">الخدمات الأكاديمية</a></li>
+        <li><a href="#">الجدول والخطة الدراسية</a></li>
+        <li><a href="#">شخصي</a></li>
+        <li><a href="#">التقارير</a></li>
+        <li><a href="#">التواصل والدعم</a></li>
+    </ul>
+</div>
+<style>
+/* تصميم زر القائمة */
+.services-toggle {
+    display: none;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+}
+.services-toggle img {
+    height: 28px;
+}
+
+/* إخفاء القائمة في الشاشات الصغيرة */
+@media (max-width: 768px) {
+    .services-bar ul {
+        display: none;
+        flex-direction: column;
+        background-color: #2f5233;
+        width: 100%;
+        padding: 10px 0;
+    }
+    .services-toggle {
+        display: block;
+    }
+}
+</style>
+
+<script>
+// التحكم في القائمة
+document.getElementById('services-menu-icon').addEventListener('click', function() {
+    var menu = document.getElementById('services-menu');
+    if (menu.style.display === 'flex' || menu.style.display === 'block') {
+        menu.style.display = 'none';
+    } else {
+        menu.style.display = 'flex';
+    }
+});
+</script>
+
+
+<!-- قائمة الفصول واسم الصفحة -->
+
+   <style> 
+   #ttitle>h3 { font-size: 18px;
+                font-weight: bold;
+   }
+                </style>
+          <div style="margin-left: 5rem;" > 
+            <div  class="print">
+            <img src="https://registration.kku.edu.sa/kku/images/ar/print.png" alt="طباعة" style="border:0px; filter:brightness(0) saturate(100%) invert(40%) sepia(29%) saturate(472%) hue-rotate(83deg) brightness(101%) contrast(88%)">
+            </div>
+            <div class="help"> </div>
+    <div class="plan" style="width: revert">
+        <span id="title">
+             <h3>نتائج المقررات</h3>
+        </span>
+        </div>
+</div>
+</div>
+
+<!-- المحتوى -->
+ <from id="myFrm" name="myFrm" method="post"action="/kku/ui/student/courses_results/index/coursesResultsIndex.faces"
+ enctype="application/x-www-form-urlencoded">
+ <input type="hidden" name="myFrm" value="myFrm">
+ <table align="center" width="99%" cellspacing="0" cellpadding="0" border="0">
+    <tbody>
+        <tr>
+            <td class="fontTextTitle"></td>
+
+        </tr>
+        <tr>
+            <td height="25"></td>
+        </tr>
+    </tbody>
+ </table>
+ <input type="hidden" name="myFrm:j_id_id208" value="">
+ <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tbody>
+        <tr>
+            <td>
+                <div class="page-header">
+    <select name="myFrm:j_id_id209" size="1" onchange="submit()">
+        <option value="465">الفصل الصيفي 1446</option>
+        <option value="462">الفصل الثاني 1446</option>
+    </select>
+            </td>
+        </tr>
+        <tr>
+            <td height="18"></td>
+        </tr>
+    </tbody>
+ </table>
+<div class="content">
+    <table border="0">
+        <thead>
+            <tr>
+                <th class="HEADING">رمز المقرر</th>
+                <th class="HEADING">اسم المقرر</th>
+                <th class="HEADING">التقدير</th>
+                <th class="HEADING">النقاط</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="ROW1">
+                <td>452-نظم-3</td>
+                <td>حقوق الملكية الفكرية الصناعية</td>
+                <td>أ+</td>
+                <td>15</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<br>
+<br>
+<table width="98%" cellpadding="0" style="border-width:1pt; border-style:groove;" cellspacing="0" border="0">
+                <tbody><tr class="ROW2">
+                    <td width="170">
+                        <span id="myFrm:SEM_GPA" class="fontText">المعدل الفصلي</span> :
+                    </td>
+                    <td>
+                        <span id="myFrm:semesterGPA" class="fontText">5.0</span>
+                    </td>
+                    <td width="50"></td>
+                    <td width="170">
+                        <span id="myFrm:CUM_AVG" class="fontText">المعدل التراكمي</span> :
+                    </td>
+                    <td>
+                        <span id="myFrm:cumulativeGPA" class="fontText">4.57</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <br>
+        <input type="hidden" name="javax.faces.ViewState" id="j_id_id0:javax.faces.ViewState:6" value="-3373680700306917780:-2721126651939401785" autocomplete="off">
+</from>
+<!-- الفوتر -->
+<div id="footer">
+    <div id="footer-conntent">
+       <div id="footer-middle-elemts">
+        <div class="f-logo">
+    <img src="https://registration.kku.edu.sa/kku/images/kku-logo-min.png" alt="شعار الجامعة" style="filter: brightness(0) invert(1); height: 3.8rem;">
+
+        </div>
+</div>
+</div>
+</div>
+
+</body>
+</html>
